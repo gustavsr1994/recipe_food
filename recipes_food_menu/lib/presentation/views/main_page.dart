@@ -1,8 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipes_food_menu/presentation/common/style/color_palletes.dart';
 import 'package:recipes_food_menu/presentation/common/style/text_style.dart';
+import 'package:recipes_food_menu/presentation/common/widgets/card/card_list_recipe.dart';
+import 'package:recipes_food_menu/presentation/controllers/menuselected/menu_selected_bloc.dart';
 import 'package:recipes_food_menu/presentation/controllers/recipe/recipe_bloc.dart';
 
 class MainPage extends StatefulWidget {
@@ -13,59 +14,78 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  var listMenu = [
+        'indonesia',
+        'italy',
+        'china',
+        'satay',
+        'noodle',
+        'meatball'
+      ];
   @override
   void initState() {
     super.initState();
-    context.read<RecipeBloc>().add(SearchRecipe(keyword: "rendang"));
+    context.read<MenuSelectedBloc>().add(MenuSelect(index: 0));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: colorBlack,
-        title: Text(
-          "Recipe Food",
-          style: textStyleLarge(colorFont: colorBlueSky, boldStatus: true),
-        ),
-      ),
-      body: BlocBuilder<RecipeBloc, RecipeState>(
-        builder: (context, state) {
-          if (state is RecipeSuccess) {
-            return ListView.builder(
-              itemCount: state.recipeEntity!.listEntity!.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 3,
-                  child: Column(
+    return BlocListener<MenuSelectedBloc, MenuSelectedState>(
+      listener: (context, state) {
+        if (state is NameSelected) {
+          listMenu = state.listCategory!;
+          context
+              .read<RecipeBloc>()
+              .add(SearchRecipe(keyword: state.nameSelected));
+        }
+      },
+      child: DefaultTabController(
+        length: listMenu.length,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: colorBlack,
+            title: Text(
+              "Recipe Food",
+              style: textStyleLarge(colorFont: colorBlueSky, boldStatus: true),
+            ),
+            bottom: TabBar(
+                isScrollable: true,
+                unselectedLabelColor: colorWhite,
+                indicatorColor: colorGreenSky,
+                labelColor: colorBlueSky,
+                labelStyle: textStyleMedium(boldStatus: true, colorFont: colorBlueSky),
+                onTap: (value) => context
+                    .read<RecipeBloc>()
+                    .add(SearchRecipe(keyword: listMenu[value])),
+                tabs: [
+                  for (var item in listMenu)
+                    Tab(
+                      text: item.toString().toUpperCase(),
+                    )
+                ]),
+          ),
+          body: Container(
+            color: colorBlack,
+            child: BlocBuilder<RecipeBloc, RecipeState>(
+              builder: (context, state) {
+                if (state is RecipeSuccess) {
+                  return GridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 4,
                     children: [
-                      CachedNetworkImage(
-                        imageUrl: state.recipeEntity!.listEntity![index].image!.replaceAll("https", "http"),
-                        fit: BoxFit.cover,
-                        height: 100,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,),
-                          ),
-                        ),
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
-                      ),
-                      Text(state.recipeEntity!.listEntity![index].title!)
+                      for (var item in state.listRecipe!)
+                        CardListRecipe(
+                          data: item,
+                        )
                     ],
-                  ),
-                );
+                  );
+                } else {
+                  return const SizedBox();
+                }
               },
-            );
-          } else if (state is RecipeError) {
-            return Text(state.message!);
-          } else {
-            return const SizedBox();
-          }
-        },
+            ),
+          ),
+        ),
       ),
     );
   }

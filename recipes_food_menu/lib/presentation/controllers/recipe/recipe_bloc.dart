@@ -20,7 +20,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
                       dio: DioClient(apiBaseUrl: ApiConstant.baseUrl))))
           .searchRecipe(event.keyword!);
       try {
-        emit(RecipeSuccess(recipeEntity: result));
+        emit(RecipeSuccess(listRecipe: result));
       } on DioError catch (e) {
         if (e.type == DioErrorType.connectTimeout ||
             e.type == DioErrorType.receiveTimeout) {

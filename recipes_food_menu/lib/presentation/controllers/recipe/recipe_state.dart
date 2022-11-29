@@ -8,8 +8,8 @@ class RecipeInitial extends RecipeState {}
 class RecipeLoading extends RecipeState {}
 
 class RecipeSuccess extends RecipeState {
-  final RecipeEntity? recipeEntity;
-  RecipeSuccess({this.recipeEntity});
+  final List<RecipeEntity>? listRecipe;
+  RecipeSuccess({this.listRecipe});
 }
 
 class RecipeError extends RecipeState {

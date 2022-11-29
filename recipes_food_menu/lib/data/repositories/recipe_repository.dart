@@ -2,7 +2,7 @@ import 'package:recipes_food_menu/data/datasources/recipe_datasource.dart';
 import 'package:recipes_food_menu/domain/entities/recipe_entity.dart';
 
 abstract class RecipeRepository {
-  Future<RecipeEntity> searchRecipe(String keyword);
+  Future<List<RecipeEntity>> searchRecipe(String keyword);
 }
 
 class RecipeRepositoryImpl extends RecipeRepository {
@@ -10,18 +10,18 @@ class RecipeRepositoryImpl extends RecipeRepository {
   RecipeRepositoryImpl({required this.dataSource});
 
   @override
-  Future<RecipeEntity> searchRecipe(String keyword) async {
-    var listRecipe = <DataRecipe>[];
+  Future<List<RecipeEntity>> searchRecipe(String keyword) async {
+    var listRecipe = <RecipeEntity>[];
     var data = await dataSource.listRecipe(keyword);
 
     for (var items in data.results!) {
-      listRecipe.add(DataRecipe(
+      listRecipe.add(RecipeEntity(
           id: items.id,
           title: items.title,
           servings: items.servings,
           readyInMinutes: items.readyInMinutes,
-          image: '${data.baseUri}${items.image} '));
+          image: '${data.baseUri}${items.image}'));
     }
-    return RecipeEntity(listEntity: listRecipe);
+    return listRecipe;
   }
 }
