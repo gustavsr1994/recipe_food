@@ -4,6 +4,7 @@ import 'package:recipes_food_menu/presentation/views/main_page.dart';
 
 import 'presentation/controllers/menuselected/menu_selected_bloc.dart';
 import 'presentation/controllers/recipe/recipe_bloc.dart';
+import 'presentation/controllers/video/video_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => MenuSelectedBloc(),
+        ),
+        BlocProvider(
+          create: (context) => VideoBloc(),
         )
       ],
       child: MaterialApp(
