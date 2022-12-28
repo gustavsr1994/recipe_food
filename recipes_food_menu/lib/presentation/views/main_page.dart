@@ -106,7 +106,7 @@ class _MainPageState extends State<MainPage> {
                               height: 5,
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 5, horizontal: 10),
                               child: Text(
                                 "Video",

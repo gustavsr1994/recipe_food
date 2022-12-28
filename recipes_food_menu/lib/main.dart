@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:recipes_food_menu/presentation/controllers/bloc/detailrecipe_bloc.dart';
 import 'package:recipes_food_menu/presentation/views/main_page.dart';
 
 import 'presentation/controllers/menuselected/menu_selected_bloc.dart';
@@ -26,15 +28,20 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => VideoBloc(),
+        ),
+        BlocProvider(
+          create: (context) => DetailrecipeBloc(),
         )
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
           debugShowCheckedModeBanner: false,
-          home: const MainPage(key: Key("value"),)),
+          home: const MainPage(
+            key: Key("value"),
+          )),
     );
   }
 }
