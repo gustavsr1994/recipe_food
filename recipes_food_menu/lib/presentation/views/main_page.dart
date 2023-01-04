@@ -29,12 +29,7 @@ class _MainPageState extends State<MainPage> {
       listener: (context, state) {
         if (state is NameSelected) {
           listMenu = state.listCategory!;
-          context
-              .read<RecipeBloc>()
-              .add(SearchRecipe(keyword: state.nameSelected));
-          context
-              .read<VideoBloc>()
-              .add(GetListVideo(keyword: state.nameSelected));
+          searchRecipe(state.nameSelected!);
         }
       },
       child: DefaultTabController(
@@ -54,13 +49,7 @@ class _MainPageState extends State<MainPage> {
                 labelStyle:
                     textStyleMedium(boldStatus: true, colorFont: colorBlueSky),
                 onTap: (value) {
-                  context
-                      .read<RecipeBloc>()
-                      .add(SearchRecipe(keyword: listMenu[value]));
-
-                  context
-                      .read<VideoBloc>()
-                      .add(GetListVideo(keyword: listMenu[value]));
+                  searchRecipe(listMenu[value]);
                 },
                 tabs: [
                   for (var item in listMenu)
@@ -80,7 +69,6 @@ class _MainPageState extends State<MainPage> {
                         flex: 4,
                         child: GridView.count(
                           crossAxisCount: 2,
-                          mainAxisSpacing: 4,
                           children: [
                             for (var item in state.listRecipe!)
                               CardListRecipe(
@@ -94,66 +82,18 @@ class _MainPageState extends State<MainPage> {
                     }
                   },
                 ),
-                BlocBuilder<VideoBloc, VideoState>(
-                  builder: (context, state) {
-                    if (state is VideoSuccess) {
-                      return Expanded(
-                        flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
-                              child: Text(
-                                "Video",
-                                style: textStyleMedium(
-                                    boldStatus: true, colorFont: colorBlueSky),
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  for (var item in state.listVideo!)
-                                    Container(
-                                      margin: const EdgeInsets.all(8),
-                                      width: MediaQuery.of(context).size.width,
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              20,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          image: DecorationImage(
-                                              image: CachedNetworkImageProvider(
-                                                item.thumbnail!,
-                                                errorListener: () => Icon(
-                                                  Icons.error,
-                                                  color: colorBlueSky,
-                                                ),
-                                              ),
-                                              fit: BoxFit.cover)),
-                                    )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                )
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void searchRecipe(String keyword){
+
+                  context
+                      .read<RecipeBloc>()
+                      .add(SearchRecipe(keyword: keyword));
   }
 }

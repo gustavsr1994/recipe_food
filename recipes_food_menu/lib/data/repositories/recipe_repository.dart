@@ -36,6 +36,8 @@ class RecipeRepositoryImpl extends RecipeRepository {
     result.imgRecipe = data.image;
     result.title = data.title;
     result.cookTime = data.cookingMinutes;
+    result.healthyScore = data.healthScore;
+    result.serve = data.servings;
     result.listCuisine = data.cuisines;
     result.listDiets = data.diets;
     result.listDishTypes = data.dishTypes;

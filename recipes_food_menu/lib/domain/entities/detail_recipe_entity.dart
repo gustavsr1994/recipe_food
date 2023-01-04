@@ -3,6 +3,8 @@ class DetailRecipeEntity {
   String? title;
   String? imgRecipe;
   int? cookTime;
+  int? serve;
+  num? healthyScore;
   List<String>? listIngredient;
   String? summary;
   List<String>? listCuisine;
